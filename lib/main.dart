@@ -1,25 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import './position_stack.dart';
 import './other_screen.dart';
 import './responsive_stack.dart';
+import 'dart:developer';
 
 const Color darkBlue = Color.fromARGB(255, 18, 32, 47);
 
 void main() {
+  debugPaintSizeEnabled = true;
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    //return MaterialApp(
-    //theme: ThemeData.dark().copyWith(
-    //sets the app dark blue
-    //scaffoldBackgroundColor: darkBlue,
-    //),
-    //debugShowCheckedModeBanner: false,
-    //home: Scaffold(
     return MaterialApp(
+      //debugShowMaterialGrid: true,
       home: Scaffold(
         appBar: AppBar(),
         body: ResponsiveStack(),
@@ -41,6 +38,8 @@ class ContainerWithCircle extends StatelessWidget {
   double _height = 0.0;
   @override
   Widget build(BuildContext context) {
+    //debugPaintSizeEnabled = true;
+
     _width = MediaQuery.of(context).size.width;
     _height = MediaQuery.of(context).size.height;
     final TextStyle style = TextStyle(color: Colors.black);
