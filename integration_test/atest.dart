@@ -9,21 +9,30 @@ import 'package:tester/main.dart' as app;
 
 //import '../lib/dummy_data/dummy_user.dart';
 
-
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('end-to-end test', () {
-    
     testWidgets('end to end navigation test', (WidgetTester tester) async {
       app.main();
 
       await tester.pumpAndSettle();
+      const testKey = Key('theOne');
 
-      final myKeyFinder = find.byKey(Key('theKey'));
+      //final nullKeyFinder = find.byKey(Key('pooKey'));
+      final numKeyFinder = find.byKey(Key('1')); //can find
+      final couponCardFinder = find.byKey(Key('couponCard'));
+      final miscCardWidgetFinder = find.byKey(Key('3-cardWidget'));
+
+      //final myKeyFinder = find.byKey(Key('theKey'));
       await tester.pumpAndSettle();
+      expect(numKeyFinder, findsWidgets);
+      expect(couponCardFinder, findsOneWidget);
+      expect(miscCardWidgetFinder, findsOneWidget);
+      expect(find.byKey(testKey), findsOneWidget);
+      //await tester.pumpAndSettle();
 
-      expect(myKeyFinder, findsWidgets);
+      //expect(myKeyFinder, findsWidgets);
     });
   });
 }
