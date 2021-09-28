@@ -17,6 +17,18 @@ void main() {
       app.main();
 
       await tester.pumpAndSettle();
+
+      //starts at TopApp so find button to navigate
+      final naviButton = find.byKey(Key('firstButton'));
+
+      await tester.tap(naviButton);
+
+      await tester.pumpAndSettle();
+      //should be at MyApp which has column, TopApp does not
+      //expect(find.byType(SizedBox), findsOneWidget);
+      //find find text go back
+      expect(find.text('go back'), findsOneWidget);
+      //confirmed on MyApp so look for the keys in card grid's cards
       const testKey = Key('theOne');
 
       //final nullKeyFinder = find.byKey(Key('pooKey'));

@@ -12,10 +12,50 @@ import 'dart:developer';
 import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-const Color darkBlue = Color.fromARGB(255, 18, 32, 47);
-
 void main() {
-  runApp(ProviderScope(child: MyApp()));
+  runApp(VeryTopApp());
+}
+
+class VeryTopApp extends StatelessWidget {
+  const VeryTopApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: TopApp(),
+    );
+  }
+}
+
+class TopApp extends StatelessWidget {
+  const TopApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Container(
+                child: ElevatedButton(
+              key: const Key('firstButton'),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MyApp()),
+                );
+              },
+              child: Text(
+                'push me for second page',
+              ),
+            )),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 class MyApp extends ConsumerStatefulWidget {
@@ -32,43 +72,57 @@ class _MyAppState extends ConsumerState<MyApp> {
   Widget build(BuildContext context) {
     //debugPaintSizeEnabled = true;
     //list of maps
-    final response = ref.watch(dioTester.cProvider); //as Map<String, dynamic>;
-    print('response: $response');
-    final couponMap = response.data?.value;
-    final couponsList = couponMap?['coupons'];
-    print('coupons: $couponsList');
+    //final response = ref.watch(dioTester.cProvider); //as Map<String, dynamic>;
+    //print('response: $response');
+    //final couponMap = response.data?.value;
+    //final couponsList = couponMap?['coupons'];
+    // print('coupons: $couponsList');
 
-    return MaterialApp(
-      home: Scaffold(
-        body: GridView.count(
-          crossAxisCount: 4,
-          children: List.generate(9, (index) {
-            //for k,v in imageUrl, caption Map:
-            if (index < 8) {
-              print('0-7 index: $index');
-              return Center(
-                child: CardWidget(
-                  key: Key('$index-cardWidget'),
-                  testKey: Key(
-                    index.toString(),
-                  ),
-                  imageUrl: 'assets/images/starwars/stormtrooper_icon.png',
-                ),
-              );
-            } else {
-              print('8 index: $index');
-              return Center(
-                child: CardWidget(
-                    key: Key('couponCard'),
-                    testKey: Key(
-                      'theOne',
-                    ),
-                    routePath: '/coupons'),
-              );
-            }
-          }),
+    return Container(
+      child: Column(children: <Widget>[
+        SizedBox(height: 50),
+        Container(
+          child: ElevatedButton(
+            key: const Key('secondButton'),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text(
+              'go back',
+            ),
+          ),
         ),
-      ),
+        Expanded(
+          child: GridView.count(
+            crossAxisCount: 4,
+            children: List.generate(9, (index) {
+              //for k,v in imageUrl, caption Map:
+              if (index < 8) {
+                print('0-7 index: $index');
+                return Center(
+                  child: CardWidget(
+                    key: Key('$index-cardWidget'),
+                    testKey: Key(
+                      index.toString(),
+                    ),
+                    imageUrl: 'assets/images/starwars/stormtrooper_icon.png',
+                  ),
+                );
+              } else {
+                print('8 index: $index');
+                return Center(
+                  child: CardWidget(
+                      key: Key('couponCard'),
+                      testKey: Key(
+                        'theOne',
+                      ),
+                      routePath: '/coupons'),
+                );
+              }
+            }),
+          ),
+        ),
+      ]),
     );
   }
 }
