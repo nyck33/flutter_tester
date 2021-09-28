@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'dart:convert';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 const _baseUrl = 'https://coupon-fastapi.herokuapp.com';
 
@@ -63,8 +64,14 @@ final dummyJson = {
   ]
 };
 
+/*
 void main() async {
-  Response? response = await postUser(); //await getUser();
+  DioTester dioTester = DioTester();
+  //Response? response = await postUser(); //await getUser();
+  Response? response = await dioTester.getAllCoupons(); //await getUser();
+
+  //AsyncValue<Response> response = watch(DioTester().couponsProvider);
+
   print(response.runtimeType);
   print(response?.data);
   //jsonDecode returned a string for Dio
@@ -72,40 +79,88 @@ void main() async {
 
   response?.data.forEach((key, value) => print("$key : $value"));
 }
+*/
 
-Future<Response<dynamic>?> postUser() async {
-  final Response? response;
-  //final path = '/get-all-coupons/';
-  final path = '/user-update-coupons/';
-  try {
-    response = await dio.post(_baseUrl + path, data: dummyJson);
-    print(response.data);
-  } catch (e) {
-    print('post error: $e');
-  } finally {
-    print('done');
+class DioTester {
+  /*
+  final couponsProvider = FutureProvider<Response<dynamic>?>((ref) async {
+    //final Response? response;
+    const String path = '/get-all-coupons';
+
+    try {
+      //response = await dio.get(_baseUrl + path);
+      final Map<String, dynamic>? response =
+          await dio.get(_baseUrl + path) as Map<String, dynamic>;
+
+      //print('repo response.data: ${response.data}');
+      //return response.data;
+      return response?['coupons'];
+    } catch (e) {
+      print('getAllCoupons error: $e');
+    }
+  });
+  */
+  final cProvider = FutureProvider<Map<String, dynamic>?>((ref) async {
+    const String path = '/get-all-coupons';
+    final Response? response;
+    final Map<String, dynamic>? couponsJson;
+    try {
+      response = await dio.get(_baseUrl + path);
+      couponsJson = response.data;
+      return couponsJson;
+    } catch (e) {
+      print('error cProvider $e');
+      //return null;
+    }
+  });
+
+  Future<Response<dynamic>?> getAllCoupons() async {
+    final String path = '/get-all-coupons';
+    final Response? response;
+
+    try {
+      response = await dio.get(_baseUrl + path);
+      print('repo response.data: ${response.data}');
+      return response.data;
+    } catch (e) {
+      print('getAllCoupons error: $e');
+    }
   }
-}
 
-Future<Response<dynamic>?> getHttp() async {
-  try {
-    var response = await Dio().get('http://www.google.com');
-    // print(response);
-    print(response.runtimeType);
-    return response;
-  } catch (e) {
-    print(e);
+  Future<Response<dynamic>?> postUser() async {
+    final Response? response;
+    //final path = '/get-all-coupons/';
+    final path = '/user-update-coupons/';
+    try {
+      response = await dio.post(_baseUrl + path, data: dummyJson);
+      print(response.data);
+    } catch (e) {
+      print('post error: $e');
+    } finally {
+      print('done');
+    }
   }
-}
 
-Future<Response<dynamic>?> getUser() async {
-  final _baseUrl = 'https://reqres.in/api';
-  try {
-    var response = await Dio().get(_baseUrl + '/users/10');
-    // print(response);
-    print(response.runtimeType);
-    return response;
-  } catch (e) {
-    print(e);
+  Future<Response<dynamic>?> getHttp() async {
+    try {
+      var response = await Dio().get('http://www.google.com');
+      // print(response);
+      print(response.runtimeType);
+      return response;
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<Response<dynamic>?> getUser() async {
+    final _baseUrl = 'https://reqres.in/api';
+    try {
+      var response = await Dio().get(_baseUrl + '/users/10');
+      // print(response);
+      print(response.runtimeType);
+      return response;
+    } catch (e) {
+      print(e);
+    }
   }
 }
