@@ -25,7 +25,7 @@ void main() {
 
       await tester.pumpAndSettle();
       //should be at MyApp which has column, TopApp does not
-      //expect(find.byType(SizedBox), findsOneWidget);
+      expect(find.byType(SizedBox), findsOneWidget);
       //find find text go back
       expect(find.text('go back'), findsOneWidget);
       //confirmed on MyApp so look for the keys in card grid's cards
